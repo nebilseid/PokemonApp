@@ -2,7 +2,7 @@ package com.example.domain.model
 
 data class Pokemon(
     val name: String,
-    val id: Int
+    val url: String
 )
 
 data class PokemonDetail(
@@ -11,6 +11,10 @@ data class PokemonDetail(
     val height: Int,
     val weight: Int,
     val imageUrl: String?,
-    val types: List<String> // List of type names
+    val types: List<String>,
+    val abilities: List<Ability>
 )
 
+data class Ability(
+    val name: String
+)

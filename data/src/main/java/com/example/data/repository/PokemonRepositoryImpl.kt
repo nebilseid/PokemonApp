@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.data.api.PokemonApiService
-import com.example.data.mapper.toPokemon
 import com.example.data.mapper.toPokemonDetail
 import com.example.data.paging.PokemonPagingSource
 import com.example.domain.model.Pokemon
@@ -16,10 +15,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
+import javax.inject.Named
 
-class PokemonRepositoryImpl(
+class PokemonRepositoryImpl @Inject constructor(
     private val apiService: PokemonApiService,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    @Named("IO") private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : PokemonRepository {
 
     override fun getPokemonList(): Flow<PagingData<Pokemon>> {
@@ -39,5 +40,3 @@ class PokemonRepositoryImpl(
         }
     }
 }
-
-

@@ -40,8 +40,7 @@ class PokemonListViewModel @Inject constructor(
 
     fun onPokemonClick(pokemon: Pokemon) {
         viewModelScope.launch {
-            _navigateToDetail.emit(pokemon.name)  // Or pokemon.id.toString()
+            _navigateToDetail.emit(pokemon.name)
         }
     }
 }
-

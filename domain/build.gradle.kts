@@ -45,7 +45,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.paging.runtime.ktx)
-    //hilt
+    // hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
 }

@@ -64,13 +64,13 @@ dependencies {
 
     // OkHttp logging
     implementation(libs.logging.interceptor)
-    implementation (libs.okhttp)
+    implementation(libs.okhttp)
 
     // Moshi and gson
     implementation(libs.moshi.kotlin.codegen)
     implementation(libs.moshi)
     implementation(libs.converter.gson)
-    implementation (libs.moshi.kotlin)
+    implementation(libs.moshi.kotlin)
 
     // timber logging
     implementation(libs.timber)

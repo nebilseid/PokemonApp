@@ -26,9 +26,11 @@ object NetworkModule {
         return OkHttpClient.Builder()
             .connectTimeout(NetworkConstants.TIMEOUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(NetworkConstants.TIMEOUT_SECONDS, TimeUnit.SECONDS)
-            .addInterceptor(HttpLoggingInterceptor().apply {
-                level = HttpLoggingInterceptor.Level.BODY
-            })
+            .addInterceptor(
+                HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                }
+            )
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
                     .addHeader(Headers.CONTENT_TYPE, Headers.CONTENT_TYPE_JSON)
@@ -48,7 +50,7 @@ object NetworkModule {
     @Singleton
     fun provideRetrofit(
         okHttpClient: OkHttpClient,
-        moshi: Moshi,
+        moshi: Moshi
     ): Retrofit = Retrofit.Builder()
         .baseUrl(NetworkConstants.FULL_BASE_URL)
         .client(okHttpClient)

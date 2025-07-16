@@ -1,19 +1,19 @@
 package com.example.presentation.navigation
 
-import androidx.compose.runtime.Composable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-/*import com.example.presentation.ui.detail.PokemonDetailScreen
-import com.example.presentation.ui.list.PokemonListScreen
-import com.example.presentation.ui.list.PokemonListViewModel
+import androidx.navigation.*
+import androidx.navigation.compose.*
+import com.example.presentation.ui.pokemonDetail.PokemonDetailScreen
+import com.example.presentation.ui.pokemonList.PokemonListScreen
+import com.example.presentation.ui.pokemonList.PokemonListViewModel
 
 @Composable
 fun AppNavGraph(
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
+    contentPadding: PaddingValues,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -25,15 +25,20 @@ fun AppNavGraph(
             val viewModel: PokemonListViewModel = hiltViewModel()
             PokemonListScreen(
                 viewModel = viewModel,
-                onItemClick = { pokemonName ->
+                onPokemonClick = { pokemonName ->
                     navController.navigate("${Routes.POKEMON_DETAIL}/$pokemonName")
-                }
+                },
+                contentPadding = contentPadding
             )
         }
 
         composable("${Routes.POKEMON_DETAIL}/{pokemonName}") { backStackEntry ->
             val name = backStackEntry.arguments?.getString("pokemonName") ?: return@composable
-            PokemonDetailScreen(pokemonName = name)
+            PokemonDetailScreen(
+                nameOrId = name,
+                canNavigateBack = true,
+                onBackClick = { navController.popBackStack() }
+            )
         }
     }
-}*/
+}

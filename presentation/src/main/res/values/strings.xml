@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="label_name">Name: %1$s</string>
+    <string name="label_height">Height: %1$d</string>
+    <string name="label_weight">Weight: %1$d</string>
+    <string name="label_types">Types: %1$s</string>
+    <string name="label_abilities">Abilities: %1$s</string>
+</resources>

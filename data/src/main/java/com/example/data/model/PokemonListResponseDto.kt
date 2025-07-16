@@ -20,7 +20,8 @@ data class PokemonDetailDto(
     val height: Int,
     val weight: Int,
     val sprites: SpritesDto,
-    val types: List<TypeSlotDto>
+    val types: List<TypeSlotDto>,
+    val abilities: List<AbilitySlotDto>
 )
 
 @JsonClass(generateAdapter = true)
