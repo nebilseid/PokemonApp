@@ -2,46 +2,46 @@ package com.example.presentation.ui.pokemonList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.domain.model.Pokemon
 import com.example.domain.usecase.GetPokemonListUseCase
-import com.example.domain.util.Result
-import com.example.presentation.ui.state.UiState
+import com.example.presentation.ui.state.PokemonListUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class PokemonListViewModel(
+@HiltViewModel
+class PokemonListViewModel @Inject constructor(
     private val getPokemonListUseCase: GetPokemonListUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow<UiState<List<Pokemon>>>(UiState.Loading)
-    val uiState: StateFlow<UiState<List<Pokemon>>> = _uiState
+    private val _uiState = MutableStateFlow<PokemonListUiState>(PokemonListUiState.Loading)
+    val uiState: StateFlow<PokemonListUiState> = _uiState.asStateFlow()
 
-    init {
-        fetchPokemonList()
-    }
+    val pokemonPagingFlow: Flow<PagingData<Pokemon>> = getPokemonListUseCase()
+        .cachedIn(viewModelScope)
+        .onStart { _uiState.value = PokemonListUiState.Loading }
+        .catch { throwable -> _uiState.value = PokemonListUiState.Error(throwable.localizedMessage ?: "Unknown Error") }
+        .onEach { _uiState.value = PokemonListUiState.Success(it) }
 
-    private fun fetchPokemonList() {
+    private val _navigateToDetail = MutableSharedFlow<String>()
+    val navigateToDetail: SharedFlow<String> = _navigateToDetail.asSharedFlow()
+
+    fun onPokemonClick(pokemon: Pokemon) {
         viewModelScope.launch {
-            _uiState.value = UiState.Loading
-            when (val result = getPokemonListUseCase.invoke()) {
-                is Result.Success -> {
-                    val data = result.data
-                    if (data is List<*>) {
-                        @Suppress("UNCHECKED_CAST")
-                        _uiState.value = UiState.Success(data as List<Pokemon>)
-                    } else {
-                        _uiState.value = UiState.Error("Unexpected data type")
-                    }
-                }
-                is Result.Error -> {
-                    _uiState.value = UiState.Error(result.exception.message ?: "Unknown error")
-                }
-                is Result.Loading -> {
-                    _uiState.value = UiState.Loading
-                }
-            }
-
+            _navigateToDetail.emit(pokemon.name)  // Or pokemon.id.toString()
         }
     }
 }
+

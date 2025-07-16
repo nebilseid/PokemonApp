@@ -1,7 +1,11 @@
 package com.example.presentation.ui.state
 
-sealed class UiState<out T> {
-    object Loading : UiState<Nothing>()
-    data class Success<T>(val data: T) : UiState<T>()
-    data class Error(val message: String) : UiState<Nothing>()
+import androidx.paging.PagingData
+import com.example.domain.model.Pokemon
+
+sealed class PokemonListUiState {
+    object Loading : PokemonListUiState()
+    data class Success(val pokemonPagingData: PagingData<Pokemon>) : PokemonListUiState()
+    data class Error(val message: String) : PokemonListUiState()
+    object Empty : PokemonListUiState()
 }

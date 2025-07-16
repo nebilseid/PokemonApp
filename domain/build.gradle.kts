@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -43,4 +45,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.paging.runtime.ktx)
+    //hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 }

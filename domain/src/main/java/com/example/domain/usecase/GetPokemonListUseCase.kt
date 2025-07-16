@@ -1,17 +1,17 @@
 package com.example.domain.usecase
 
+import androidx.paging.PagingData
 import com.example.domain.model.Pokemon
 import com.example.domain.repository.PokemonRepository
 import com.example.domain.util.Result
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
 
-class GetPokemonListUseCase(
+class GetPokemonListUseCase @Inject constructor(
     private val repository: PokemonRepository
 ) {
-    suspend operator fun invoke(): Result<List<Pokemon>> {
-        return try {
-            Result.Success(repository.getPokemonList())
-        } catch (e: Exception) {
-            Result.Error(e)
-        }
+    operator fun invoke(): Flow<PagingData<Pokemon>> {
+        return repository.getPokemonList()
     }
 }
+

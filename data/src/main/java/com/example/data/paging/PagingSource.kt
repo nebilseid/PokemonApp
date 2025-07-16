@@ -5,41 +5,36 @@ import androidx.paging.PagingState
 import com.example.data.api.PokemonApiService
 import com.example.data.mapper.toPokemon
 import com.example.domain.model.Pokemon
-import retrofit2.HttpException
-import java.io.IOException
 
 class PokemonPagingSource(
     private val apiService: PokemonApiService
 ) : PagingSource<Int, Pokemon>() {
 
+    companion object {
+        private const val STARTING_OFFSET = 0
+        private const val PAGE_SIZE = 20
+    }
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Pokemon> {
-        val offset = params.key ?: 0
-        val limit = params.loadSize
-
+        val offset = params.key ?: STARTING_OFFSET
         return try {
-            val response = apiService.getPokemonList(limit = limit, offset = offset)
+            val response = apiService.getPokemonList(limit = params.loadSize, offset = offset)
             val pokemons = response.results.map { it.toPokemon() }
-
+            val nextKey = if (pokemons.isEmpty()) null else offset + params.loadSize
             LoadResult.Page(
                 data = pokemons,
-                prevKey = if (offset == 0) null else offset - limit,
-                nextKey = if (pokemons.isEmpty()) null else offset + limit
+                prevKey = if (offset == STARTING_OFFSET) null else offset - params.loadSize,
+                nextKey = nextKey
             )
-        } catch (e: IOException) {
-            LoadResult.Error(e)
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             LoadResult.Error(e)
         }
     }
 
     override fun getRefreshKey(state: PagingState<Int, Pokemon>): Int? {
-        return state.anchorPosition?.let { position ->
-            val page = state.closestPageToPosition(position)
-            page?.prevKey?.plus(PAGE_SIZE) ?: page?.nextKey?.minus(PAGE_SIZE)
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(PAGE_SIZE)
+                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(PAGE_SIZE)
         }
-    }
-
-    companion object {
-        const val PAGE_SIZE = 20
     }
 }

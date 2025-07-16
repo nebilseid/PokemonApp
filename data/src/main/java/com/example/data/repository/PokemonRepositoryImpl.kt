@@ -14,6 +14,7 @@ import com.example.domain.util.Result
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 
 class PokemonRepositoryImpl(
@@ -21,25 +22,22 @@ class PokemonRepositoryImpl(
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : PokemonRepository {
 
-    override suspend fun getPokemonList(offset: Int, limit: Int): Flow<PagingData<Pokemon>> {
+    override fun getPokemonList(): Flow<PagingData<Pokemon>> {
         return Pager(
-            config = PagingConfig(
-                pageSize = PokemonPagingSource.PAGE_SIZE,
-                enablePlaceholders = false
-            ),
+            config = PagingConfig(pageSize = 20, enablePlaceholders = false),
             pagingSourceFactory = { PokemonPagingSource(apiService) }
         ).flow
+            .flowOn(dispatcher)
     }
 
-    override suspend fun getPokemonDetail(nameOrId: String): Result<PokemonDetail> =
-        withContext(dispatcher) {
-            try {
-                val response = apiService.getPokemonDetail(nameOrId)
-                val detail = response.toPokemonDetail()
-                Result.Success(detail)
-            } catch (e: Exception) {
-                Result.Error(e)
-            }
+    override suspend fun getPokemonDetail(nameOrId: String): Result<PokemonDetail> = withContext(dispatcher) {
+        try {
+            val response = apiService.getPokemonDetail(nameOrId)
+            Result.Success(response.toPokemonDetail())
+        } catch (e: Exception) {
+            Result.Error(e)
         }
+    }
 }
+
 
