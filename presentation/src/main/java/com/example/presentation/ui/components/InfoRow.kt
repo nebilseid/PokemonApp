@@ -18,8 +18,8 @@ fun InfoRow(label: LabelRes, value: Any, modifier: Modifier = Modifier) {
             is String -> stringResource(id = label.resId, value)
             else -> stringResource(id = label.resId, value.toString())
         },
-        style = MaterialTheme.typography.bodyLarge.copy(
-            fontWeight = FontWeight.Bold
+        style = MaterialTheme.typography.titleLarge.copy(
+            fontWeight = FontWeight.Light
         ),
         modifier = modifier.padding(vertical = 4.dp)
     )
