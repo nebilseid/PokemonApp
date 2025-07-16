@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.domain.model.Pokemon
@@ -16,7 +15,7 @@ import com.example.presentation.ui.state.PokemonListUiState
 
 @Composable
 fun PokemonListScreen(
-    viewModel: PokemonListViewModel = hiltViewModel(),
+    viewModel: PokemonListViewModelType,
     onPokemonClick: (String) -> Unit,
     contentPadding: PaddingValues
 ) {

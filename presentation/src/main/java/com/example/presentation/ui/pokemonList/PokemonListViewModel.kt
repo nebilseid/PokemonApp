@@ -24,21 +24,23 @@ import javax.inject.Inject
 @HiltViewModel
 class PokemonListViewModel @Inject constructor(
     private val getPokemonListUseCase: GetPokemonListUseCase
-) : ViewModel() {
+) : ViewModel(), PokemonListViewModelType {
 
     private val _uiState = MutableStateFlow<PokemonListUiState>(PokemonListUiState.Loading)
-    val uiState: StateFlow<PokemonListUiState> = _uiState.asStateFlow()
+    override val uiState: StateFlow<PokemonListUiState> = _uiState.asStateFlow()
 
-    val pokemonPagingFlow: Flow<PagingData<Pokemon>> = getPokemonListUseCase()
+    override val pokemonPagingFlow: Flow<PagingData<Pokemon>> = getPokemonListUseCase()
         .cachedIn(viewModelScope)
         .onStart { _uiState.value = PokemonListUiState.Loading }
-        .catch { throwable -> _uiState.value = PokemonListUiState.Error(throwable.localizedMessage ?: "Unknown Error") }
+        .catch { throwable ->
+            _uiState.value = PokemonListUiState.Error(throwable.localizedMessage ?: "Unknown Error")
+        }
         .onEach { _uiState.value = PokemonListUiState.Success(it) }
 
     private val _navigateToDetail = MutableSharedFlow<String>()
-    val navigateToDetail: SharedFlow<String> = _navigateToDetail.asSharedFlow()
+    override val navigateToDetail: SharedFlow<String> = _navigateToDetail.asSharedFlow()
 
-    fun onPokemonClick(pokemon: Pokemon) {
+    override fun onPokemonClick(pokemon: Pokemon) {
         viewModelScope.launch {
             _navigateToDetail.emit(pokemon.name)
         }

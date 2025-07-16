@@ -1,6 +1,6 @@
 package com.example.presentation.ui.main
 
-import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
