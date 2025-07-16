@@ -2,11 +2,10 @@ package com.example.presentation.ui.main
 
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavHostController
 import com.example.presentation.navigation.AppNavGraph
 import com.example.presentation.ui.components.AppToolbar
+
 @Composable
 fun MainScreen(
     navController: NavHostController,
