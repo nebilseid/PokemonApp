@@ -4,25 +4,24 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.domain.model.Pokemon
 import com.example.presentation.ui.state.PokemonListUiState
+import androidx.paging.compose.collectAsLazyPagingItems
 
 @Composable
 fun PokemonListScreen(
     viewModel: PokemonListViewModelType,
     onPokemonClick: (String) -> Unit,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
+    listState: LazyListState
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    val lazyPagingItems: LazyPagingItems<Pokemon> =
-        viewModel.pokemonPagingFlow.collectAsLazyPagingItems()
+    val lazyPagingItems = viewModel.pokemonPagingFlow.collectAsLazyPagingItems()
 
     Box(
         modifier = Modifier
@@ -33,12 +32,12 @@ fun PokemonListScreen(
             is PokemonListUiState.Loading -> LoadingScreen()
             is PokemonListUiState.Error -> ErrorScreen(
                 message = (uiState as PokemonListUiState.Error).message,
-                onRetry = { /* handle retry */ }
+                onRetry = { lazyPagingItems.retry() }
             )
-
             is PokemonListUiState.Empty -> EmptyScreen()
             is PokemonListUiState.Success -> {
                 PokemonListContent(
+                    listState = listState,
                     lazyPagingItems = lazyPagingItems,
                     onItemClick = { pokemon -> onPokemonClick(pokemon.name) }
                 )
@@ -46,3 +45,4 @@ fun PokemonListScreen(
         }
     }
 }
+

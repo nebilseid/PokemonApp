@@ -1,5 +1,6 @@
 package com.example.presentation.ui.main
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -10,7 +11,8 @@ import com.example.presentation.ui.components.AppToolbar
 fun MainScreen(
     navController: NavHostController,
     title: String,
-    canNavigateBack: Boolean
+    canNavigateBack: Boolean,
+    listState: LazyListState
 ) {
     Scaffold(
         topBar = {
@@ -27,7 +29,9 @@ fun MainScreen(
     ) { innerPadding ->
         AppNavGraph(
             navController = navController,
-            contentPadding = innerPadding
+            contentPadding = innerPadding,
+            listState = listState
         )
     }
 }
+

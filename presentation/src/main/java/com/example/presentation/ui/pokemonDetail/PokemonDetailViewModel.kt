@@ -24,20 +24,13 @@ class PokemonDetailViewModel @Inject constructor(
             _uiState.value = PokemonDetailUiState.Loading
 
             when (val result = getPokemonDetailUseCase(nameOrId)) {
-                is Result.Success -> {
-                    _uiState.value = PokemonDetailUiState.Success(result.data)
-                }
-
-                is Result.Error -> {
-                    _uiState.value = PokemonDetailUiState.Error(
-                        result.exception.message ?: "Something went wrong"
-                    )
-                }
-
-                Result.Loading -> {
-                    _uiState.value = PokemonDetailUiState.Loading
-                }
+                is Result.Success -> _uiState.value = PokemonDetailUiState.Success(result.data)
+                is Result.Error -> _uiState.value = PokemonDetailUiState.Error(
+                    result.exception.message ?: "Something went wrong"
+                )
+                else -> Unit
             }
         }
     }
+
 }

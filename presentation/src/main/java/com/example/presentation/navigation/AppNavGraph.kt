@@ -1,7 +1,9 @@
 package com.example.presentation.navigation
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -15,21 +17,21 @@ import com.example.presentation.ui.pokemonList.PokemonListViewModel
 fun AppNavGraph(
     navController: NavHostController,
     contentPadding: PaddingValues,
-    modifier: Modifier = Modifier
+    listState: LazyListState
 ) {
     NavHost(
         navController = navController,
-        startDestination = Routes.POKEMON_LIST,
-        modifier = modifier
+        startDestination = Routes.POKEMON_LIST
     ) {
         composable(Routes.POKEMON_LIST) {
             val viewModel: PokemonListViewModel = hiltViewModel()
             PokemonListScreen(
                 viewModel = viewModel,
-                onPokemonClick = { pokemonName ->
-                    navController.navigate("${Routes.POKEMON_DETAIL}/$pokemonName")
+                onPokemonClick = { name ->
+                    navController.navigate("${Routes.POKEMON_DETAIL}/$name")
                 },
-                contentPadding = contentPadding
+                contentPadding = contentPadding,
+                listState = listState
             )
         }
 
